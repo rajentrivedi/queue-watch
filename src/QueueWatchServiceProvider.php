@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace QueueWatch\QueueWatch;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
+use QueueWatch\QueueWatch\Commands\QueueWatchCommand;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class QueueWatchServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -16,10 +16,8 @@ class SkeletonServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('skeleton')
+            ->name('queue-watch')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_migration_table_name_table')
-            ->hasCommand(SkeletonCommand::class);
+            ->hasCommand(QueueWatchCommand::class);
     }
 }
