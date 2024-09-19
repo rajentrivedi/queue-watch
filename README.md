@@ -5,6 +5,12 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/rajentrivedi/queue-watch/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/rajentrivedi/queue-watch/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/rajentrivedi/queue-watch.svg?style=flat-square)](https://packagist.org/packages/rajentrivedi/queue-watch)
 
+## Supported Versions
+| Version| Supported          |
+| -------| ------------------ |
+| 10.x   | :white_check_mark: |
+| 11.x   | :white_check_mark: |
+
 Managing queue workers in a Laravel application can sometimes be tedious, especially when dealing with long-running processes. A common challenge is ensuring that workers are restarted whenever there are changes in the jobs, events, or listeners folders. Restarting workers manually can be inefficient and prone to oversight specially during development, potentially leading to application inconsistencies or stale queue processing.
 
 To solve this problem, I’ve developed a Laravel package that automates this process. This package detects file changes within your Laravel application’s jobs, events, and listeners folders and automatically restarts the queue worker when changes are detected.
