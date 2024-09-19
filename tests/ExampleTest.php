@@ -1,13 +1,12 @@
 <?php
 
-use QueueWatch\QueueWatch\Commands\QueueWatchCommand;
-use Illuminate\Support\Facades\Artisan;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Finder\Finder;
 use Illuminate\Console\Command;
+use QueueWatch\QueueWatch\Commands\QueueWatchCommand;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Process\Process;
 
 beforeEach(function () {
-    $this->commandForTest = new QueueWatchCommand();
+    $this->commandForTest = new QueueWatchCommand;
     $this->command = Mockery::mock(QueueWatchCommand::class)
         ->makePartial()
         ->shouldAllowMockingProtectedMethods();
@@ -36,14 +35,14 @@ test('getWatchDirectories returns correct directories', function () {
 
 test('getQueueWorkArguments returns correct arguments', function () {
     $args = $this->command->getQueueWorkArguments();
-   
+
     expect($args)->toBeArray();
     expect($args)->toContain('--verbose');
 });
 
 test('startQueueWorker creates a process', function () {
     $this->command->shouldReceive('info')->once()->with('Queue worker started.');
-    
+
     $this->command->startQueueWorker();
 
     $processProperty = new ReflectionProperty($this->command, 'process');

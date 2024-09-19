@@ -2,9 +2,9 @@
 
 namespace QueueWatch\QueueWatch;
 
+use QueueWatch\QueueWatch\Commands\QueueWatchCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use QueueWatch\QueueWatch\Commands\QueueWatchCommand;
 
 class QueueWatchServiceProvider extends PackageServiceProvider
 {

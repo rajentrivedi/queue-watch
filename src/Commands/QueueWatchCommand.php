@@ -3,8 +3,8 @@
 namespace QueueWatch\QueueWatch\Commands;
 
 use Illuminate\Console\Command;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Process\Process;
 
 class QueueWatchCommand extends Command
 {
@@ -29,43 +29,44 @@ class QueueWatchCommand extends Command
     protected $process;
 
     public function handle()
-{
-    $this->startQueueWorker();
+    {
+        $this->startQueueWorker();
 
-    $finder = new Finder();
-    $directories = $this->getWatchDirectories();
+        $finder = new Finder;
+        $directories = $this->getWatchDirectories();
 
-    if (empty($directories)) {
-        $this->error('No directories to watch. The queue worker will run without file watching.');
-        $this->monitorQueueWorker();
-        return;
-    }
+        if (empty($directories)) {
+            $this->error('No directories to watch. The queue worker will run without file watching.');
+            $this->monitorQueueWorker();
 
-    $finder->files()->in($directories)->name('*.php');
-
-    $lastModified = $this->getLastModifiedTime($finder);
-   
-    while (true) {
-        usleep(1000000); 
-
-        clearstatcache(); 
-
-        $currentLastModified = $this->getLastModifiedTime($finder);
-
-        if ($currentLastModified > $lastModified) {
-            $this->info("File save detected. Restarting queue worker...");
-            $this->stopQueueWorker();
-            $this->startQueueWorker();
-            $lastModified = $currentLastModified; 
+            return;
         }
 
-        $this->monitorQueueWorker();
+        $finder->files()->in($directories)->name('*.php');
+
+        $lastModified = $this->getLastModifiedTime($finder);
+
+        while (true) {
+            usleep(1000000);
+
+            clearstatcache();
+
+            $currentLastModified = $this->getLastModifiedTime($finder);
+
+            if ($currentLastModified > $lastModified) {
+                $this->info('File save detected. Restarting queue worker...');
+                $this->stopQueueWorker();
+                $this->startQueueWorker();
+                $lastModified = $currentLastModified;
+            }
+
+            $this->monitorQueueWorker();
+        }
     }
-}
 
     protected function monitorQueueWorker()
     {
-        if (!$this->process->isRunning()) {
+        if (! $this->process->isRunning()) {
             $this->error('Queue worker stopped unexpectedly. Restarting...');
             $this->startQueueWorker();
         }
@@ -139,7 +140,6 @@ class QueueWatchCommand extends Command
             }
         }
 
-        
         $args[] = '--verbose';
 
         return $args;
