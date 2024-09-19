@@ -53,5 +53,8 @@ jobs:
 
       - name: List Installed Dependencies
         run: composer show -D
+        
+      - name: PHP unit test
+        run: vendor/bin/pest 
 
 
