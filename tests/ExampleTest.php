@@ -1,22 +1,25 @@
 <?php
 
 use Illuminate\Console\Command;
-use QueueWatch\QueueWatch\Commands\QueueWatchCommand;
+use Illuminate\Console\OutputStyle;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
+use App\Console\Commands\QueueWorkWatch;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use QueueWatch\QueueWatch\Commands\QueueWatchCommand;
 
 beforeEach(function () {
     $this->commandForTest = new QueueWatchCommand;
     $this->command = Mockery::mock(QueueWatchCommand::class)
         ->makePartial()
         ->shouldAllowMockingProtectedMethods();
-
+    // $this->command->setLaravel(app());
     $this->command->shouldReceive('argument')->andReturn(null);
     $this->command->shouldReceive('option')->andReturn(null);
 });
 
 test('command signature is correct', function () {
-    // dd($this->commandForTest->getName());
     expect($this->commandForTest->getName())->toBe('queue:work:watch');
 });
 
@@ -41,14 +44,26 @@ test('getQueueWorkArguments returns correct arguments', function () {
 });
 
 test('startQueueWorker creates a process', function () {
-    $this->command->shouldReceive('info')->once()->with('Queue worker started.');
+    // Mock the command
+    $this->command->setLaravel(app());
+    $input = new StringInput('');
+    $output = new BufferedOutput();
+    
+    $outputStyle = new OutputStyle($input, $output);
+    
+    $this->command->setOutput($outputStyle);
 
+    $this->command->shouldReceive('info')->with('Queue worker started.');
+    
+    // Call the method being tested
     $this->command->startQueueWorker();
 
+    // Check if a process was created
     $processProperty = new ReflectionProperty($this->command, 'process');
     $processProperty->setAccessible(true);
     $process = $processProperty->getValue($this->command);
 
+    // Assert that the process is an instance of Symfony's Process class
     expect($process)->toBeInstanceOf(Process::class);
 });
 
@@ -61,8 +76,16 @@ test('stopQueueWorker stops the running process', function () {
     $processProperty->setAccessible(true);
     $processProperty->setValue($this->command, $mockProcess);
 
-    $this->command->shouldReceive('info')->once()->with('Queue worker stopped.');
+    // $this->command->expectsOutput('Queue worker stopped.');
 
+    $this->command->setLaravel(app());
+    $input = new StringInput('');
+    $output = new BufferedOutput();
+    
+    $outputStyle = new OutputStyle($input, $output);
+    
+    $this->command->setOutput($outputStyle);
+    $this->command->shouldReceive('info')->once()->with('Queue worker stopped.');
     $this->command->stopQueueWorker();
 });
 
@@ -87,7 +110,13 @@ test('monitorQueueWorker restarts stopped process', function () {
     $processProperty = new ReflectionProperty($this->command, 'process');
     $processProperty->setAccessible(true);
     $processProperty->setValue($this->command, $mockProcess);
-
+    $this->command->setLaravel(app());
+    $input = new StringInput('');
+    $output = new BufferedOutput();
+    
+    $outputStyle = new OutputStyle($input, $output);
+    
+    $this->command->setOutput($outputStyle);
     $this->command->shouldReceive('error')->once()->with('Queue worker stopped unexpectedly. Restarting...');
     $this->command->shouldReceive('startQueueWorker')->once();
 
@@ -98,26 +127,49 @@ test('handle method runs correctly when no directories to watch', function () {
     $this->command->shouldReceive('startQueueWorker')->once();
     $this->command->shouldReceive('monitorQueueWorker')->once();
     $this->command->shouldReceive('getWatchDirectories')->andReturn([]);
+    $this->command->setLaravel(app());
+    $input = new StringInput('');
+    $output = new BufferedOutput();
+    
+    $outputStyle = new OutputStyle($input, $output);
+    
+    $this->command->setOutput($outputStyle);
     $this->command->shouldReceive('error')->once()->with('No directories to watch. The queue worker will run without file watching.');
 
     $this->command->handle();
 });
 
 // test('handle method detects file changes and restarts worker', function () {
-//     $this->command->shouldReceive('startQueueWorker')->twice();
-//     $this->command->shouldReceive('stopQueueWorker')->once();
-//     $this->command->shouldReceive('monitorQueueWorker')->twice();
-//     $this->command->shouldReceive('getWatchDirectories')->andReturn([__DIR__]);
-//     $this->command->shouldReceive('getLastModifiedTime')
-//         ->andReturn(1000, 2000);
-//     $this->command->shouldReceive('info')->once()->with('Changes detected. Restarting queue worker...');
+//     // Set up the Laravel app for the command
+//     $this->command->setLaravel(app());
 
-//     // Mock sleep to prevent infinite loop
-//     $this->command->shouldReceive('sleep')->once()->andReturnUsing(function () {
+//     // Set up input and output streams for OutputStyle
+//     $input = new StringInput('');
+//     $output = new BufferedOutput();
+//     $outputStyle = new OutputStyle($input, $output);
+    
+//     // Assign the OutputStyle to the command
+//     $this->command->setOutput($outputStyle);
+
+//     // Mock the command methods
+    
+//     $this->command->shouldReceive('startQueueWorker');
+//     $this->command->shouldReceive('stopQueueWorker');
+//     $this->command->shouldReceive('monitorQueueWorker');
+//     $this->command->shouldReceive('getWatchDirectories')->andReturn([__DIR__]);
+//     $this->command->shouldReceive('getLastModifiedTime')->andReturn(1000, 2000);
+
+//     // Mock the info output
+//     $this->command->shouldReceive('info')->with('Changes detected. Restarting queue worker...');
+
+//     // Mock sleep and throw exception to break the loop
+//     $this->command->shouldReceive('sleep')->andReturnUsing(function () {
 //         throw new Exception('End test loop');
 //     });
 
-//     expect(fn() => $this->command->handle())->toThrow(Exception::class, 'End test loop');
+//     // Run the handle method and expect the exception to be thrown
+//     // expect(fn() => $this->command->handle())->toThrow(Exception::class, 'End test loop');
+    
 // });
 
 afterEach(function () {

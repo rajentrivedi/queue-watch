@@ -5,9 +5,11 @@ namespace QueueWatch\QueueWatch\Commands;
 use Illuminate\Console\Command;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class QueueWatchCommand extends Command
 {
+    
     protected $signature = 'queue:work:watch
                             {connection? : The name of the queue connection to work}
                             {--queue= : The names of the queues to work}
