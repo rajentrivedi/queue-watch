@@ -107,7 +107,7 @@ class QueueWatchCommand extends Command
         $this->process = new Process($command);
         $this->process->setPty(true);
         $this->process->start(function ($type, $buffer) {
-            $this->output->write($buffer);
+            $this->info($buffer);
         });
 
         $this->info('Queue worker started.');
