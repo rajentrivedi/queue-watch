@@ -46,6 +46,7 @@ class QueueWatchCommand extends Command
 
         $lastModified = $this->getLastModifiedTime($finder);
 
+        /** @phpstan-ignore-next-line */
         while (true) {
             usleep(1000000);
 
