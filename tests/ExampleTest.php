@@ -2,12 +2,11 @@
 
 use Illuminate\Console\Command;
 use Illuminate\Console\OutputStyle;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Process\Process;
-use App\Console\Commands\QueueWorkWatch;
+use QueueWatch\QueueWatch\Commands\QueueWatchCommand;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use QueueWatch\QueueWatch\Commands\QueueWatchCommand;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Process\Process;
 
 beforeEach(function () {
     $this->commandForTest = new QueueWatchCommand;
@@ -47,14 +46,14 @@ test('startQueueWorker creates a process', function () {
     // Mock the command
     $this->command->setLaravel(app());
     $input = new StringInput('');
-    $output = new BufferedOutput();
-    
+    $output = new BufferedOutput;
+
     $outputStyle = new OutputStyle($input, $output);
-    
+
     $this->command->setOutput($outputStyle);
 
     $this->command->shouldReceive('info')->with('Queue worker started.');
-    
+
     // Call the method being tested
     $this->command->startQueueWorker();
 
@@ -80,10 +79,10 @@ test('stopQueueWorker stops the running process', function () {
 
     $this->command->setLaravel(app());
     $input = new StringInput('');
-    $output = new BufferedOutput();
-    
+    $output = new BufferedOutput;
+
     $outputStyle = new OutputStyle($input, $output);
-    
+
     $this->command->setOutput($outputStyle);
     $this->command->shouldReceive('info')->once()->with('Queue worker stopped.');
     $this->command->stopQueueWorker();
@@ -112,10 +111,10 @@ test('monitorQueueWorker restarts stopped process', function () {
     $processProperty->setValue($this->command, $mockProcess);
     $this->command->setLaravel(app());
     $input = new StringInput('');
-    $output = new BufferedOutput();
-    
+    $output = new BufferedOutput;
+
     $outputStyle = new OutputStyle($input, $output);
-    
+
     $this->command->setOutput($outputStyle);
     $this->command->shouldReceive('error')->once()->with('Queue worker stopped unexpectedly. Restarting...');
     $this->command->shouldReceive('startQueueWorker')->once();
@@ -129,10 +128,10 @@ test('handle method runs correctly when no directories to watch', function () {
     $this->command->shouldReceive('getWatchDirectories')->andReturn([]);
     $this->command->setLaravel(app());
     $input = new StringInput('');
-    $output = new BufferedOutput();
-    
+    $output = new BufferedOutput;
+
     $outputStyle = new OutputStyle($input, $output);
-    
+
     $this->command->setOutput($outputStyle);
     $this->command->shouldReceive('error')->once()->with('No directories to watch. The queue worker will run without file watching.');
 
@@ -147,12 +146,12 @@ test('handle method runs correctly when no directories to watch', function () {
 //     $input = new StringInput('');
 //     $output = new BufferedOutput();
 //     $outputStyle = new OutputStyle($input, $output);
-    
+
 //     // Assign the OutputStyle to the command
 //     $this->command->setOutput($outputStyle);
 
 //     // Mock the command methods
-    
+
 //     $this->command->shouldReceive('startQueueWorker');
 //     $this->command->shouldReceive('stopQueueWorker');
 //     $this->command->shouldReceive('monitorQueueWorker');
@@ -169,7 +168,7 @@ test('handle method runs correctly when no directories to watch', function () {
 
 //     // Run the handle method and expect the exception to be thrown
 //     // expect(fn() => $this->command->handle())->toThrow(Exception::class, 'End test loop');
-    
+
 // });
 
 afterEach(function () {
