@@ -4,7 +4,19 @@
     "keywords": [
         "Rajen Trivedi",
         "laravel",
-        "queue-watch"
+        "queue-watch",
+        "queue",
+        "laravel queue",
+        "laravel queue watch",
+        "events",
+        "listeners",
+        "jobs",
+        "queue worker",
+        "job monitoring",
+        "filesystem watcher",
+        "watcher",
+        "process automation",
+        "continuous queue processing"
     ],
     "homepage": "https://github.com/rajentrivedi/queue-watch",
     "license": "MIT",
