@@ -6,10 +6,11 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/rajentrivedi/queue-watch.svg?style=flat-square)](https://packagist.org/packages/rajentrivedi/queue-watch)
 
 ## Supported Versions
-| Version| Supported          |
-| -------| ------------------ |
-| 10.x   | :white_check_mark: |
-| 11.x   | :white_check_mark: |
+| Version | Supported          |
+|---------| ------------------ |
+| 10.x    | :white_check_mark: |
+| 11.x    | :white_check_mark: |
+| 12.x    | :white_check_mark: |
 
 Managing queue workers in a Laravel application can sometimes be tedious, especially when dealing with long-running processes. A common challenge is ensuring that workers are restarted whenever there are changes in the jobs, events, or listeners folders. Restarting workers manually can be inefficient and prone to oversight specially during development, potentially leading to application inconsistencies or stale queue processing.
 
